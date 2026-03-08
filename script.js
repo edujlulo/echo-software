@@ -5,8 +5,8 @@ const maze = [
   [1, 1, 1, 1, 1],
 ];
 
-// // Si inicias en [0, 0], el camino más largo es 11
-// console.log(findLongestPath(maze, 0, 0)); // Salida: 11
+// // Si inicias en [0, 0], el camino más largo es 14
+// console.log(findLongestPath(maze, 0, 0)); // Salida: 14
 // Hacer la función findLongestPath
 
 function findLongestPath(maze, a, b) {
@@ -17,7 +17,12 @@ function findLongestPath(maze, a, b) {
   let positionAlreadyTaken = [];
 
   function validatePosition(posRow, posCol) {
-    if (posRow < 0 || posCol < 0) {
+    if (
+      posRow < 0 ||
+      posCol < 0 ||
+      posRow >= maze.length ||
+      posCol >= maze[posRow].length
+    ) {
       return false;
     }
 
@@ -42,8 +47,8 @@ function findLongestPath(maze, a, b) {
     if (validatePosition(posRow, posCol + 1)) {
       posibleNextPositions.push([posRow, posCol + 1]);
     }
-    if (validatePosition(posRow + 1, posCol + 1)) {
-      posibleNextPositions.push([posRow + 1, posCol + 1]);
+    if (validatePosition(posRow + 1, posCol)) {
+      posibleNextPositions.push([posRow + 1, posCol]);
     }
     if (validatePosition(posRow, posCol - 1)) {
       posibleNextPositions.push([posRow, posCol - 1]);
@@ -56,11 +61,7 @@ function findLongestPath(maze, a, b) {
     return 0;
   }
 
-  positionAlreadyTaken.push([actualRow, actualColumn]);
-
   let nextPositions = lookForPosibleNextPositions(actualRow, actualColumn);
-
-  let safety = 0;
 
   while (nextPositions.length !== 0) {
     positionAlreadyTaken.push([actualRow, actualColumn]);
@@ -68,12 +69,6 @@ function findLongestPath(maze, a, b) {
     [actualRow, actualColumn] = nextPositions[0];
 
     nextPositions = lookForPosibleNextPositions(actualRow, actualColumn);
-
-    safety++;
-
-    if (safety > 20) {
-      break;
-    }
   }
 
   return positionAlreadyTaken.length;
